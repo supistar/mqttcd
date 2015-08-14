@@ -14,6 +14,7 @@ int parse_arguments(mqttcd_context_t* context, int argc, char** argv) {
         { "daemonize",   no_argument,       NULL, 0 },
         { "handler",     required_argument, NULL, 0 },
         { "handler_dir", required_argument, NULL, 0 },
+        { "handler_name",required_argument, NULL, 0 },
         { 0,             0,                 0,    0 }
     };
 
@@ -27,7 +28,8 @@ int parse_arguments(mqttcd_context_t* context, int argc, char** argv) {
         &context->raw_option.topic,
         &context->raw_option.daemonize,
         &context->raw_option.handler,
-        &context->raw_option.handler_dir
+        &context->raw_option.handler_dir,
+        &context->raw_option.handler_name
     };
 
     // initialize variables
@@ -135,6 +137,12 @@ int parse_arguments(mqttcd_context_t* context, int argc, char** argv) {
     }
     context->option.handler_dir = context->raw_option.handler_dir;
 
+    if (context->raw_option.handler_name == NULL) {
+        // Default handler name is "default"
+        context->raw_option.handler_name = strdup("default");
+    }
+    context->option.handler_name = context->raw_option.handler_name;
+
     return MQTTCD_SUCCEEDED;
 }
 
@@ -149,7 +157,8 @@ int free_arguments(mqttcd_context_t* context) {
         &context->raw_option.topic,
         &context->raw_option.daemonize,
         &context->raw_option.handler,
-        &context->raw_option.handler_dir
+        &context->raw_option.handler_dir,
+        &context->raw_option.handler_name
     };
 
     int i;

@@ -109,7 +109,7 @@ disconnect:
 int execute_message_handler(mqttcd_context_t* context, char* payload) {
     // prepare path of handler
     char* handler_dir = context->option.handler_dir;
-    char* handler_name = "default";
+    char* handler_name = context->option.handler_name;
 
     int path_len = strlen(handler_dir) + 1 + strlen(handler_name) + 1;
     char* path = malloc(path_len);

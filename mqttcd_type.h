@@ -41,6 +41,7 @@ typedef struct _mqttcd_raw_option {
     char* daemonize;
     char* handler;
     char* handler_dir;
+    char* handler_name;
 } mqttcd_raw_option_t;
 
 typedef struct _mqttcd_option {
@@ -54,6 +55,7 @@ typedef struct _mqttcd_option {
     int daemonize;
     int handler;
     char* handler_dir;
+    char* handler_name;
 } mqttcd_option_t;
 
 typedef struct _mqttcd_context {
