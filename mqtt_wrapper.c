@@ -55,7 +55,7 @@ int mqtt_recv(mqttcd_context_t* context, unsigned char* buf, int length, int* pa
 
     if (*packet_type == -1) {
         if (errno == EAGAIN || errno == EWOULDBLOCK) {
-            logger_error(context, "timeout\n");
+            logger_debug(context, "timeout\n");
             return MQTTCD_RECV_TIMEOUT;
         }
 
