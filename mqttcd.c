@@ -1,6 +1,7 @@
 /* vim: set et fenc=utf-8 ff=unix ts=4 sw=4 sts=4 : */
 
 #include "mqttcd.h"
+#include <time.h>
 
 int main(int argc, char** argv) {
     mqttcd_context_t context;
@@ -61,7 +62,7 @@ int mqttcd(mqttcd_context_t* context) {
     }
 
     // receive loop
-    int count = 0;
+    long long ping_time = time(NULL);
     while (signal_interrupted() == 0) {
         unsigned char buf[MQTTCD_BUFFER_LENGTH];
         int packet_type;
@@ -70,19 +71,20 @@ int mqttcd(mqttcd_context_t* context) {
             goto disconnect;
         }
 
+        long long diff = (long long)(time(NULL) - ping_time);
+        logger_debug(context, "Current diff : %lld sec\n", diff);
         if (ret == MQTTCD_RECV_TIMEOUT) {
-            if (count++ > MQTTCD_PING_INTERVAL) {
+            if (diff > MQTTCD_PING_INTERVAL) {
                 ret = mqtt_send_ping(context);
                 if (ret != MQTTCD_SUCCEEDED) {
                     goto disconnect;
                 }
-                count = 0;
+                ping_time = time(NULL);
             }
             continue;
         }
 
-        // if (ret == MQTTCD_SUCCEEDED)
-        count = 0;
+        ping_time = time(NULL);
 
         if (packet_type == PUBLISH) {
             char* payload = NULL;
